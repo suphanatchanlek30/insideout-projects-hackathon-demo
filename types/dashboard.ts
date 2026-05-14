@@ -1,101 +1,150 @@
-export type DashboardPage =
+export type DashboardPageKey =
   | "risk-command-center"
   | "ai-recommended-order"
   | "promotion-recommendation"
   | "business-impact";
 
-export type RiskLevel = "high" | "medium" | "low";
+export type CardTone = "danger" | "warning" | "success" | "neutral";
+export type RiskLevel = "สูง" | "กลาง" | "ต่ำ";
+
+export interface SidebarItem {
+  key: DashboardPageKey;
+  label: string;
+  icon: string;
+}
 
 export interface TopBarItem {
   label: string;
   value: string;
+  subvalue?: string;
+  icon: string;
 }
 
-export interface KpiCard {
+export interface KpiCardData {
   id: string;
   label: string;
   value: string;
-  detail: string;
-  tone: "red" | "amber" | "green" | "slate";
+  description: string;
+  icon: string;
+  tone: CardTone;
 }
 
-export interface AlertItem {
+export interface AlertCardData {
   id: string;
-  tone: "red" | "amber";
   title: string;
   description: string;
-  action: string;
+  actionText: string;
+  tone: "red" | "amber";
 }
 
-export interface ForecastSeries {
+export interface LineSeries {
   label: string;
   color: string;
   values: number[];
 }
 
-export interface RiskTableRow {
+export interface RiskItem {
   id: string;
-  productLabel: string;
-  category: string;
-  currentStock: number;
-  dailyUsage: number;
-  daysCover: number;
+  ingredient: string;
+  currentStock: string;
+  dailyUsage: string;
+  daysCover: string;
   orderBy: string;
-  riskLevel: RiskLevel;
-  impactValue: number;
+  risk: RiskLevel;
+  impact: string;
 }
 
-export interface RecommendedOrderRow {
+export interface OrderItem {
   id: string;
-  productLabel: string;
-  category: string;
-  currentStock: number;
-  dailyUsage: number;
-  suggestedUnits: number;
-  unitCost: number;
-  totalCost: number;
-  confidence: number;
-  rationale: string;
-  status: "Pending" | "Approved";
+  ingredient: string;
+  currentStock: string;
+  dailyUsage: string;
+  daysCover: string;
+  orderBy: string;
+  arrival: string;
+  moq: string;
+  recommendedQty: string;
+  estimatedCost: number;
+  reason: string;
+  approved?: boolean;
 }
 
-export interface PromotionRecommendation {
+export interface PromotionItem {
   id: string;
-  productLabel: string;
-  promoType: string;
-  discountPct: number;
-  daysCover: number;
-  expectedLiftPct: number;
-  recoverableValue: number;
-  note: string;
+  rank: number;
+  title: string;
+  schedule: string;
+  reason: string;
+  revenueUplift: number;
+  discountCost: number;
+  ingredientCost: number;
+  avoidedWaste: number;
+  netProfitImpact: number;
+  imageLabel: string;
 }
 
-export interface BusinessImpactMetric {
+export interface WaterfallBar {
+  label: string;
+  value: number;
+  tone: "positive" | "negative" | "total";
+}
+
+export interface BusinessMetric {
   id: string;
   label: string;
+  value: string;
+  icon: string;
+}
+
+export interface CompareBar {
+  label: string;
   before: number;
-  withApp: number;
-  unit: "currency" | "percent" | "count";
-  positiveDirection: "up" | "down";
+  after: number;
 }
 
-export interface BusinessImpactSummary {
-  headlineValue: number;
-  headlineLabel: string;
-  metrics: BusinessImpactMetric[];
+export interface BusinessTableRow {
+  id: string;
+  label: string;
+  baseline: string;
+  projected: string;
+  difference: string;
 }
 
-export interface DashboardData {
-  storeLabel: string;
-  neighborhoodLabel: string;
-  topBar: TopBarItem[];
-  kpis: KpiCard[];
-  alerts: AlertItem[];
-  forecastDates: string[];
-  forecastSeries: ForecastSeries[];
-  forecastSafetyStock: number;
-  riskRows: RiskTableRow[];
-  recommendedOrders: RecommendedOrderRow[];
-  promotionRecommendations: PromotionRecommendation[];
-  businessImpact: BusinessImpactSummary;
+export interface DashboardSnapshot {
+  sidebar: SidebarItem[];
+  topbar: TopBarItem[];
+  riskCommandCenter: {
+    title: string;
+    subtitle: string;
+    kpis: KpiCardData[];
+    alerts: AlertCardData[];
+    chartLabels: string[];
+    chartSeries: LineSeries[];
+    safetyStockLabel: string;
+    riskItems: RiskItem[];
+  };
+  aiRecommendedOrder: {
+    title: string;
+    subtitle: string;
+    summaryCards: KpiCardData[];
+    managerReasonOptions: string[];
+    items: OrderItem[];
+  };
+  promotionRecommendation: {
+    title: string;
+    subtitle: string;
+    items: PromotionItem[];
+    waterfallTitle: string;
+    waterfallBars: WaterfallBar[];
+    totalImpactLabel: string;
+    totalImpactValue: string;
+  };
+  businessImpact: {
+    title: string;
+    subtitle: string;
+    metrics: BusinessMetric[];
+    compareBars: CompareBar[];
+    savingsList: Array<{ label: string; value: string; icon: string }>;
+    tableRows: BusinessTableRow[];
+  };
 }

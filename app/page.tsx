@@ -1,8 +1,5 @@
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getDashboardData } from "@/lib/dashboard-data";
+import { DashboardApp } from "@/components/dashboard/dashboard-app";
 
-export default async function Home() {
-  const dashboardData = await getDashboardData();
-
-  return <DashboardShell data={dashboardData} />;
+export default function Home() {
+  return <DashboardApp />;
 }
